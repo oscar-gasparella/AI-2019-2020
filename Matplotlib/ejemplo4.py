@@ -10,19 +10,13 @@ r = requests.get(url)
 data = json.loads(r.text)
 
 # Registramos la información de la magnitud de los terremotos
-X = []
-n = len(data["features"])
-for a in range(n):
-    X.append(data["features"][a-1]["properties"]["mag"])
+X = list(map(lambda f : f["properties"].get("mag", 0), data["features"]))
 
 # HISTOGRAMA
 fig, ax = plt.subplots(figsize=(12, 6))
 
-# Fijar el tamaño de cada intervalo de magnitudes (cada 0.5)
-bins = np.arange(0, 10, 0.5)
-
 # Calcular el histograma
-n, bins, patches = ax.hist(X, bins, density=0)
+n, bins, patches = ax.hist(X, np.arange(0, 10, 0.5), density=0)
 
 # Características de los ejes
 ax.set_xlim([0, max(X)])
